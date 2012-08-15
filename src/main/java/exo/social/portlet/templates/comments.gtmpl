@@ -1,4 +1,5 @@
 #{param name=comments/}
+#{param name=activityid/}
 
 <% for(comment in comments) { %>
     <span>
@@ -7,7 +8,7 @@
         <div class="right">${comment.postedTime}</div>
         <div class="well">
             <% if (comment.isOwner()) { %>
-            <a data-commentid="${comment.data.id}" class="close delete-comment">&times;</a>
+            <a data-commentid="${comment.data.id}" class="close delete-comment_${activityid}">&times;</a>
             <% } %>
             ${comment.data.title}
         </div>
@@ -15,4 +16,4 @@
 <% } %>
 
 <textarea class="comment-content" placeholder="Enter your comment here !"></textarea><br/>
-<button class="btn-success comment" type="submit">Comment</button>
+<button class="btn-success comment_${activityid}" type="submit">Comment</button>

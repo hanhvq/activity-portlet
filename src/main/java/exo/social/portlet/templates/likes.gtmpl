@@ -1,5 +1,6 @@
 #{param name=likers/}
 #{param name=isLiking/}
+#{param name=activityid/}
 
 <% for(liker in likers) { %>
     <a id="${liker.id}" href="${liker.profile.url}"><img class="smallAvatar" src="${liker.profile.avatarUrl}"/></a>
@@ -13,4 +14,4 @@
   def label = "+ 1"
   if (isLiking) { label = "- 1" }
 %>
-<button class="btn-mini btn-primary submit like">${label}</button>
+<button class="btn-mini btn-primary submit like_${activityid}">${label}</button>

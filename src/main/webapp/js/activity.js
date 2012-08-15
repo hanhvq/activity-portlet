@@ -1,51 +1,75 @@
 $(function() {
 
   // Like/Unlike
-  $('.jz').on("click", ".like", function() {
-    var likeUrl = this.ActivityApplication().doLike();
-    var container = this.$find(".like-container");
-    var activityId = this.$find(".activity-data").data('activityid');
-    container.load(likeUrl, {id: activityId});
+  $(".activity-container").each(function(e) {
+    var activityId = $(this).find(".activity-data").attr("data-activityid");
+    
+    $(this).jzFind(".like-container").on("click", ".like_" + activityId, function() {
+	    $(this).closest(".like-container").jzLoad("Controller.doLike()", {
+	      id : activityId
+	    }, function() {
+	    });
+	  });
+	  
   });
 
   // Add comment
-  $('.jz').on("click", ".comment", function() {
-    var commentUrl = this.ActivityApplication().doComment();
-    var container = this.$find(".comment-container");
-    var activityId = this.$find(".activity-data").data('activityid');
-    var content = this.$find(".comment-content").val();
-    container.load(commentUrl, {activityId: activityId, content: content});
+	$(".activity-container").each(function(e) {
+    var activityId = $(this).find(".activity-data").attr("data-activityid");
+    
+	  $(this).find(".comment-container").on("click", ".comment_" + activityId, function(e) {
+	    var content = $(this).jzFind(".comment-content").val();
+	    
+	    $(this).closest(".comment-container").jzLoad("Controller.doComment()", {
+	      content: content,
+	      activityId : activityId
+	    }, function() {
+	    });
+	    
+	    e.preventDefault();
+	    
+	  });
   });
-
+  
   // Delete comment
-  $('.jz').on("click", ".delete-comment", function(e) {
-    var commentUrl = this.ActivityApplication().deleteComment();
-    var activityId = this.$find(".activity-data").data('activityid');
-    var commentId = $(e.target).data('commentid');
-    $(e.target).parent().parent().remove();
+  $(".activity-container").each(function(e) {
+    var activityId = $(this).find(".activity-data").attr("data-activityid");
+    
+      $(this).find(".comment-container").on("click", ".delete-comment_" + activityId, function(e) {
+        var commentId = $(e.target).data('commentid');
+        var content = $(this).jzFind(".comment-content").val();
+        
+        $(this).closest(".comment-container").jzLoad("Controller.deleteComment()", {
+  	      activityId : activityId,
+	        commentId: commentId
+	      }, function() {
+	      });
 
-    $.ajax({
-        url: commentUrl,
-        data: {activityId: activityId, commentId: commentId}
-    });
-      
+        $(e.target).parent().parent().remove();
+        e.preventDefault();
+      });
   });
+
 
   // Load initial likes
-  $(".like-container").each(function() {
-    var likeUrl = this.ActivityApplication().loadLike();
-    var container = this.$find(".like-container");
-    var activityId = this.$find(".activity-data").data('activityid');
-    container.load(likeUrl, {id: activityId});
-
+  $(".activity-container").each(function() {
+    var activityId = $(this).find(".activity-data").attr("data-activityid");
+    
+    $(this).find(".like-container").jzLoad("Controller.loadLike()", {
+      id : activityId
+    }, function() {
+    });
   });
+
 
   // Load initial comments
-  $(".comment-container").each(function() {
-    var commentUrl = this.ActivityApplication().loadComment();
-    var container = this.$find(".comment-container");
-    var activityId = this.$find(".activity-data").data('activityid');
-    container.load(commentUrl, {id: activityId});
+  $(".activity-container").each(function() {
+    var activityId = $(this).find(".activity-data").attr("data-activityid");
+    
+    $(this).find(".comment-container").jzLoad("Controller.loadComment()", {
+      id : activityId
+    }, function() {
+    });
   });
-
+  
 });

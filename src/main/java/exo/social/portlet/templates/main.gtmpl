@@ -1,0 +1,9 @@
+#{param name=activities/}
+
+
+
+<% activities.each() { activity ->
+   flash.setActivity(activity);
+%>
+  #{include path=index.gtmpl/}
+<% } %>

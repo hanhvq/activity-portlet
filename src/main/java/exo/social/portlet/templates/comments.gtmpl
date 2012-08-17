@@ -1,6 +1,10 @@
 #{param name=comments/}
 #{param name=activityid/}
 
+<div>
+  <input class="comment_link_${activityid}" type="submit" value="Comment"></input>
+</div>
+        
 <% for(comment in comments) { %>
     <span>
         <img class="avatar" src="${comment.poster.profile.avatarUrl}"/>
@@ -15,5 +19,13 @@
     </span>
 <% } %>
 
-<textarea class="comment-content" placeholder="Enter your comment here !"></textarea><br/>
-<button class="btn-success comment_${activityid}" type="submit">Comment</button>
+<div class="comment-composer_${activityid}">
+	<textarea class="comment-content" placeholder="Enter your comment here !"></textarea><br/>
+	<button class="btn-success float-right comment_${activityid}" type="submit">Comment</button>
+</div>
+
+<script>
+  $('.comment_${activityid}').closest(".comment-container").on("click", ".comment_link_${activityid}", function() {
+    $('.comment-composer_${activityid}').fadeToggle();
+  });
+</script>

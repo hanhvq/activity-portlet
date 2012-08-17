@@ -1,0 +1,53 @@
+#{param name=activity/}
+#{param name=postIdentity/}
+<% 
+   activityId = activity.id;
+   def label = "+ 1"
+%>
+<div class="activity-data" data-activityid="${activityId}">
+  <div class="title"><%=activity.title%></div>
+</div>
+<div class="row">
+	<span class="like-container">
+	    <button class="btn-mini btn-primary submit like_${activityId}">${label}</button>
+	</span>
+
+	<script>
+	  $('.like_${activityId}').closest(".like-container").on("click", ".like_${activityId}", function() {
+	    $(this).closest(".like-container").jzLoad("Controller.doLike()", {
+	      id : '${activityId}'
+	    }, function() {
+	    });
+	  });
+	</script>
+
+</div>
+
+<div class="row">
+	<span class="comment-container">
+		<div>
+		  <input class="comment_link_${activityId}" type="submit" value="Comment"></input>
+		</div>
+		
+	  <div class="comment-composer_${activityId}">
+		  <textarea class="comment-content" placeholder="Enter your comment here !"></textarea><br/>
+		  <button class="btn-success float-right comment_${activityId}" type="submit">Comment</button>
+	  </div>
+		
+	
+		<script>
+		  $('.comment_${activityId}').closest(".comment-container").on("click", ".comment_${activityId}", function() {
+		    var content = $(this).closest(".comment-container").find(".comment-content").val();
+		    $(this).closest(".comment-container").jzLoad("Controller.doComment()", {
+		      content: content,
+		      activityId : '${activityId}'
+		    }, function() {
+		    });
+		  });
+		  
+		  $('.comment_${activityId}').closest(".comment-container").on("click", ".comment_link_${activityId}", function() {
+	      $('.comment-composer_${activityId}').fadeToggle();
+	    });
+		</script>
+  </span>
+</div>

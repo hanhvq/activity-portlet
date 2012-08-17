@@ -1,9 +1,21 @@
 #{param name=activities/}
+#{param name=activity/}
 
+<div id="gatein">
+  <div class="row">
+	  <div class="post-container">
+	    <textarea class="activity-content" placeholder="Share your thinking here !"></textarea><br/>
+	    <button class="btn-success float-right post-activity" type="submit">Post</button>
+	  </div>
+  </div>
+  
+  <div class="main-container">
+		<% activities.each() { act ->
+		   //flash.setActivity(activity);
+		   activity = act;
+		%>
+		  #{include path=index.gtmpl/}
+		<% } %>
+	</div>
 
-
-<% activities.each() { activity ->
-   flash.setActivity(activity);
-%>
-  #{include path=index.gtmpl/}
-<% } %>
+</div>

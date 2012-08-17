@@ -1,8 +1,10 @@
-<% activity = flash.activity;
+#{param name=activity/}
+
+<% 
    activityId = activity.id;
 %>
-<div id="gatein" class="activity-container">
-    <div class="activity-data" data-activityid="${activityId}"/>
+<div class="activity-container">
+    <div class="activity-data" data-activityid="${activityId}">
       <div class="title"><%=activity.title%></div>
     </div>
     <div class="row">

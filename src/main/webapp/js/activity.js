@@ -1,5 +1,24 @@
 $(function() {
 
+  // Do Post
+  $(".post-container").on("click", ".post-activity", function() {
+    var postedContent = $(this).closest(".post-container").find(".activity-content").val();
+    
+    var addedContent = $('<div>').addClass("activity-container");
+    
+    if ($(".main-container").children(':first-child').length == 0) {
+      $(".main-container").append(addedContent);
+    } else {
+      $(".main-container").children(':first-child').before(addedContent);
+    }
+    
+    $(".main-container").children(':first-child').jzLoad("Controller.doPost()", {
+      content : postedContent
+    }, function() {
+    
+    });
+  });
+  
   // Like/Unlike
   $(".activity-container").each(function(e) {
     var activityId = $(this).find(".activity-data").attr("data-activityid");
@@ -18,7 +37,7 @@ $(function() {
     var activityId = $(this).find(".activity-data").attr("data-activityid");
     
 	  $(this).find(".comment-container").on("click", ".comment_" + activityId, function(e) {
-	    var content = $(this).jzFind(".comment-content").val();
+	    var content = $(this).closest(".comment-container").find(".comment-content").val();
 	    
 	    $(this).closest(".comment-container").jzLoad("Controller.doComment()", {
 	      content: content,
@@ -70,6 +89,11 @@ $(function() {
       id : activityId
     }, function() {
     });
+    
+    $(this).find(".comment-container").on("click", ".comment_link_${activityId}", function() {
+      $('.comment-composer_${activityId}').fadeToggle();
+    });
+        
   });
   
 });

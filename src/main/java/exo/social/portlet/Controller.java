@@ -23,6 +23,7 @@ import exo.social.portlet.providers.DataProvider;
 import exo.social.portlet.templates.main;
 import exo.social.portlet.templates.comments;
 import exo.social.portlet.templates.index;
+import exo.social.portlet.templates.item;
 import exo.social.portlet.templates.likes;
 
 import javax.inject.Inject;
@@ -43,10 +44,11 @@ public class Controller
   @Inject @Path("main.gtmpl")     main main;
   @Inject @Path("form.gtmpl")     Template form;
   @Inject @Path("index.gtmpl")    index index;
+  @Inject @Path("item.gtmpl")     item item;
   @Inject @Path("likes.gtmpl")    likes likes;
   @Inject @Path("comments.gtmpl") comments comments;
 
-//  @Inject @SessionScoped Identity currentUser;
+  @Inject @SessionScoped Identity currentUser;
 
   @View
   public void index() throws IOException, Exception
@@ -71,9 +73,22 @@ public class Controller
   
   @Ajax
   @Resource
+  public void doPost(String content) throws Exception {
+    ExoSocialActivity activity = new ExoSocialActivityImpl(currentUser.getId(), null, content);
+
+    am.saveActivity(currentUser, activity);
+    
+    item.with().activity(activity).postIdentity(currentUser).render();
+
+//    main
+//        .with()
+//        .activities(dp.getActivities())
+//        .render();
+  }
+  
+  @Ajax
+  @Resource
   public void doLike(String id) {
-    String remote = RequestContext.getCurrentInstance().getRemoteUser();
-    Identity currentUser = im.getOrCreateIdentity(OrganizationIdentityProvider.NAME, remote, true);
     ExoSocialActivity activity = am.getActivity(id);
     List<Identity> likers = likers(activity);
     boolean isLiking = likers.contains(currentUser);
@@ -106,8 +121,6 @@ public class Controller
   @Ajax
   @Resource
   public void loadLike(String id) {
-    String remote = RequestContext.getCurrentInstance().getRemoteUser();
-    Identity currentUser = im.getOrCreateIdentity(OrganizationIdentityProvider.NAME, remote, true);
     ExoSocialActivity activity = am.getActivity(id);
     List<Identity> likers = likers(activity);
     boolean isLiking = likers.contains(currentUser);
@@ -123,8 +136,6 @@ public class Controller
   @Ajax
   @Resource
   public void doComment(String content, String activityId) {
-    String remote = RequestContext.getCurrentInstance().getRemoteUser();
-    Identity currentUser = im.getOrCreateIdentity(OrganizationIdentityProvider.NAME, remote, true);
     //
     ExoSocialActivity activity = am.getActivity(activityId);
     ExoSocialActivity comment = new ExoSocialActivityImpl(currentUser.getId(), null, content);
@@ -149,7 +160,7 @@ public class Controller
 
     ExoSocialActivity activity = am.getActivity(id);
     List<Activity> comments = comments(activity);
-
+    
     this.comments
         .with()
         .comments(comments)
@@ -200,8 +211,6 @@ public class Controller
   }
 
   private List<Activity> comments(ExoSocialActivity activity) {
-    String remote = RequestContext.getCurrentInstance().getRemoteUser();
-    Identity currentUser = im.getOrCreateIdentity(OrganizationIdentityProvider.NAME, remote, true);
     List<Activity> comments = new ArrayList<Activity>();
     for (ExoSocialActivity data : am.getCommentsWithListAccess(activity).loadAsList(0, 10)) {
       Identity poster = im.getIdentity(data.getUserId(), true);

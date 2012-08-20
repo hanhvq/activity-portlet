@@ -26,6 +26,7 @@ import juzu.Path;
 import juzu.SessionScoped;
 
 import org.exoplatform.commons.utils.ListAccess;
+import org.exoplatform.social.common.RealtimeListAccess;
 import org.exoplatform.social.core.activity.model.ExoSocialActivity;
 import org.exoplatform.social.core.identity.model.Identity;
 import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvider;
@@ -47,11 +48,20 @@ public class DataProvider {
   @Inject
   IdentityManager identityManager;
   
-  public List<ExoSocialActivity> getActivities() throws Exception {
+  public List<ExoSocialActivity> getActivities(ExoSocialActivity indexer, int size) throws Exception {
     String remoteUser = RequestContext.getCurrentInstance().getRemoteUser();
     Identity currentUser = identityManager.getOrCreateIdentity(OrganizationIdentityProvider.NAME, remoteUser, true);
-    ListAccess<ExoSocialActivity> activitiesListAccess = am.getActivitiesWithListAccess(currentUser);
-    return new ArrayList<ExoSocialActivity>(Arrays.asList(activitiesListAccess.load(0, 100)));
+    RealtimeListAccess<ExoSocialActivity> activitiesListAccess = am.getActivitiesWithListAccess(currentUser);
+    
+    if (activitiesListAccess.getSize() == 0) {
+      return new ArrayList<ExoSocialActivity>();
+    }
+    
+    if (indexer == null) {
+      return new ArrayList<ExoSocialActivity>(Arrays.asList(activitiesListAccess.load(0, size)));
+    }
+    
+    return new ArrayList<ExoSocialActivity>(activitiesListAccess.loadOlder(indexer, size));
   }
   
   static List<String> types = new ArrayList<String>();

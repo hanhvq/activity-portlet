@@ -19,6 +19,17 @@ $(function() {
     });
   });
   
+  // Load more
+  $('.more-container').on('click', ".load-more", function() {
+    var container = $(this).closest('.more-container');
+    var activityId = container.attr('last-activity-data');
+    
+    container.jzLoad("Controller.loadMore()", {
+      indexerId : activityId
+    }, function() {
+    });
+  });
+  
   // Like/Unlike
   $(".activity-container").each(function(e) {
     var activityId = $(this).find(".activity-data").attr("data-activityid");
@@ -80,7 +91,6 @@ $(function() {
     });
   });
 
-
   // Load initial comments
   $(".activity-container").each(function() {
     var activityId = $(this).find(".activity-data").attr("data-activityid");
@@ -90,7 +100,7 @@ $(function() {
     }, function() {
     });
     
-    $(this).find(".comment-container").on("click", ".comment_link_${activityId}", function() {
+    $(this).find(".comment-container").find('.show-comment-button').on("click", ".comment_link_${activityId}", function() {
       $('.comment-composer_${activityId}').fadeToggle();
     });
         

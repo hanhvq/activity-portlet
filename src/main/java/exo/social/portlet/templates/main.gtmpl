@@ -4,7 +4,7 @@
 <div id="gatein">
   <div class="row">
 	  <div class="post-container">
-	    <textarea class="activity-content" placeholder="Share your thinking here !"></textarea><br/>
+	    <textarea class="activity-content" placeholder="Share your thinking here!"></textarea><br/>
 	    <button class="btn-success float-right post-activity" type="submit">Post</button>
 	  </div>
   </div>
@@ -16,6 +16,12 @@
 		%>
 		  #{include path=index.gtmpl/}
 		<% } %>
+	
+	<% if (activities.size() >= 2) { %>
+		<% def activityId = activity.id; %>
+		<div class="more-container" last-activity-data="${activityId}">
+		  <button class="btn-success float-right load-more" type="submit">More</button>
+		</div>
+	<% } %>
 	</div>
-
 </div>

@@ -1,0 +1,18 @@
+#{param name=activities/}
+#{param name=activity/}
+
+<div class="main-container">
+	<% activities.each() { act ->
+	   //flash.setActivity(activity);
+	   activity = act;
+	%>
+	  #{include path=item.gtmpl/}
+	<% } %>
+  
+  <% if (activities.size() >= 2) { %>
+    <% def activityId = activity.id; %>
+    <div class="more-container" last-activity-data="${activityId}">
+      <button class="btn-success float-right load-more" type="submit">More</button>
+    </div>
+ <% } %>
+</div>

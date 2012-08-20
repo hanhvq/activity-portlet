@@ -25,6 +25,7 @@ import exo.social.portlet.templates.comments;
 import exo.social.portlet.templates.index;
 import exo.social.portlet.templates.item;
 import exo.social.portlet.templates.likes;
+import exo.social.portlet.templates.more;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -47,6 +48,7 @@ public class Controller
   @Inject @Path("item.gtmpl")     item item;
   @Inject @Path("likes.gtmpl")    likes likes;
   @Inject @Path("comments.gtmpl") comments comments;
+  @Inject @Path("more.gtmpl")     more more;
 
   @Inject @SessionScoped Identity currentUser;
 
@@ -56,7 +58,7 @@ public class Controller
 //    form.render();
     main
         .with()
-        .activities(dp.getActivities())
+        .activities(dp.getActivities(null, 2))
         .render();
   }
 
@@ -78,7 +80,10 @@ public class Controller
 
     am.saveActivity(currentUser, activity);
     
-    item.with().activity(activity).postIdentity(currentUser).render();
+    item
+        .with()
+        .activity(activity)
+        .render();
 
 //    main
 //        .with()
@@ -187,6 +192,18 @@ public class Controller
         .render();
   }
 
+  @Ajax
+  @Resource
+  public void loadMore(String indexerId) throws Exception {
+    //
+    ExoSocialActivity activity = am.getActivity(indexerId);
+    
+    more
+        .with()
+        .activities(dp.getActivities(activity, 2))
+        .render();
+  }
+  
   @Action
   public Response loadActivity(String activityId) {
     return Controller_.activity(activityId);
